@@ -1,33 +1,38 @@
-# M5Template-C-CPP
+# M5Station Library
 
-### SKU:xxx
+English | [中文](README_cn.md)
 
-Template for M5Stack C and CPP projects.
+<img src="https://static-cdn.m5stack.com/resource/docs/products/core/station_bat/station_bat_01.webp" alt="M5Station_P1" width="350" height="350">
+<img src="https://static-cdn.m5stack.com/resource/docs/products/core/station_485/station_485_01.webp" alt="M5Station_P1" width="350" height="350">
 
-## Steps
+**For the Detailed documentation of M5Station BAT, Please [Click here](https://docs.m5stack.com/en/core/station_bat)**
 
-1. Change [clang format check path](./.github/workflows/clang-format-check.yml#L9-L15).
-2. Add License content to [LICENSE](/LICENSE).
-3. Change this [README.md](./README.md#L1-L8).
-4. Change link on line 78 of [bug-report.yml](./.github/ISSUE_TEMPLATE/bug-report.yml#L78).
+**For the Detailed documentation of M5Station 485, Please [Click here](https://docs.m5stack.com/en/core/station_485)**
 
-<!-- Example
-# M5Unit-ENV
+**In order to buy M5Station 485, Please [Click here](https://shop.m5stack.com/products/m5stack-station-esp32-iot-development-kit-rs485-version)**
 
-## Overview
+## Description
 
-### SKU:U001 & U001-B & U001-C
+**M5Station** is a multi-purpose `industrial level` programmable embedded controller with Espressif `ESP32` SOC, integrated `Wi-Fi` and 'BT' solution, dual core low-power `Xtensa® 32-bit LX6` microprocessor, main frequency up to `240MHz`. Onboard `16M FLASH`, integrated `240*135 1.14" full colour HD IPS display` + `physical keypad` + `rich peripherals, two sets of six expansion ports`+ `Low-power sleep/wakeup function`+Integrated IMU `MPU6886`(BAT only). Supports two types of power supply `USB Type-C, internal rechargeable 18650 battery (BAT only)/RS485(485 only)`. The integrated high power density boost DC/DC converter SCT12A0DHKR on board ensures the `stability` of the electrical equipment even in complex applications. This device is suitable for industrial control, intelligent buildings, multi-channel data acquisition nodes and prototyping applications.
 
-Contains M5Stack-**UNIT ENV** series related case programs.ENV is an environmental sensor with integrated SHT30 and QMP6988 internally to detect temperature, humidity, and atmospheric pressure data.
 
-## Related Link
+## Version differentiation
 
-- [Document & Datasheet](https://docs.m5stack.com/en/unit/envIII)
+| M5Station-485                | M5Station-BAT                                              |
+| ---------------------------- | ---------------------------------------------------------- |
+| PWR485 (RS485 + power input) | MPU6886 on board, can carry two 18650 batteries (parallel) |
 
-## Required Libraries:
+- [Schematic PDF](https://m5stack.oss-cn-shenzhen.aliyuncs.com/resource/docs/schematic/Core/M5Station_v1.2.pdf)
 
-- [Adafruit_BMP280_Library](https://github.com/adafruit/Adafruit_BMP280_Library)
 
-## License
+<!-- ## More Information
 
-- [M5Unit-ENV - MIT](LICENSE) -->
+**UIFlow Quick Start**: [Click Here](https://docs.m5stack.com/en/quick_start/core2/uiflow)
+
+**MicroPython API**: [Click Here](https://docs.m5stack.com/en/quick_start/core2/mpy)
+
+**Arduino IDE Development**: [Click Here](https://docs.m5stack.com/en/quick_start/core2/arduino)
+
+**M5Core2 Arduino API**: [Click Here](https://docs.m5stack.com/en/api/core2/axp192_core2)
+
+**PinMap**: [Click Here](https://docs.m5stack.com/en/core/core2) -->
