@@ -39,6 +39,22 @@ class AXP192 {
         kCHG_1320mA,
     };
 
+    enum GroovePort {
+        kGroovePort_A1_A2,
+        kGroovePort_B1,
+        kGroovePort_B2,
+        kGroovePort_C1,
+        kGroovePort_C2,
+        kGroovePort_ALL,
+        kGroovePort_MAX,
+    };
+
+    enum GroovePower {
+        kGroovePower_OFF,
+        kGroovePower_ON,
+        kGroovePower_MAX,
+    };
+
     AXP192();
     void begin();
     // Will be deprecated
@@ -91,10 +107,13 @@ class AXP192 {
     void SetESPVoltage(uint16_t voltage);
     void SetLcdVoltage(uint16_t voltage);
     void SetLDOEnable(uint8_t number, bool state);
-    void SetLCDRSet(bool state);
+    // void SetLCDRSet(bool state);
     void SetBusPowerMode(uint8_t state);
     // void SetLed(uint8_t state);
     void SetCHGCurrent(uint8_t state);
+    void SetGPIOOutput(uint8_t state);
+    uint8_t GetGPIOOutput();
+    void SetGroovePower(GroovePort port, GroovePower state);
 
    private:
     void Write1Byte(uint8_t Addr, uint8_t Data);

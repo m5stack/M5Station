@@ -38,6 +38,17 @@ void AXP192::begin() {
     // Write1Byte(0x93, Read8bit(0x93) & 0xf8);
     // Serial.printf("axp: gpio2 init\n");
 
+    // GPIO0-4 are used to control Groove port power
+    // GPIO0: select NMOS open drain mode
+    Write1Byte(0x90, (Read8bit(0x90) & 0b11111000) | 0b00000000);
+    // GPIO1: select NMOS open drain mode
+    Write1Byte(0x92, (Read8bit(0x92) & 0b11111000) | 0b00000000);
+    // GPIO2: select NMOS open drain mode
+    Write1Byte(0x93, (Read8bit(0x93) & 0b11111000) | 0b00000000);
+    // GPIO4/GPIO3: select NMOS open drain mode
+    // Note: MSB must be set to enable GPIO functionality (info not in all datasheets)
+    Write1Byte(0x95, (Read8bit(0x95) & 0b01110000) | 0b10000101);
+
     // Enable bat detection
     Write1Byte(0x32, 0x46);
 
@@ -62,10 +73,10 @@ void AXP192::begin() {
     // Enable Bat,ACIN,VBUS,APS adc
     Write1Byte(0x82, 0xff);
 
-    SetLCDRSet(0);
-    delay(100);
-    SetLCDRSet(1);
-    delay(100);
+    // SetLCDRSet(0);
+    // delay(100);
+    // SetLCDRSet(1);
+    // delay(100);
     // I2C_WriteByteDataAt(0X15,0XFE,0XFF);
 
     // axp: check v-bus status
@@ -464,20 +475,21 @@ void AXP192::SetLDOEnable(uint8_t number, bool state) {
     }
 }
 
-void AXP192::SetLCDRSet(bool state) {
-    uint8_t reg_addr = 0x96;
-    uint8_t gpio_bit = 0x02;
-    uint8_t data;
-    data = Read8bit(reg_addr);
 
-    if (state) {
-        data |= gpio_bit;
-    } else {
-        data &= ~gpio_bit;
-    }
+// void AXP192::SetLCDRSet(bool state) {
+//     uint8_t reg_addr = 0x96;
+//     uint8_t gpio_bit = 0x02;
+//     uint8_t data;
+//     data = Read8bit(reg_addr);
 
-    Write1Byte(reg_addr, data);
-}
+//     if (state) {
+//         data |= gpio_bit;
+//     } else {
+//         data &= ~gpio_bit;
+//     }
+
+//     Write1Byte(reg_addr, data);
+// }
 
 // Select source for BUS_5V
 // 0 : use internal boost
@@ -485,13 +497,6 @@ void AXP192::SetLCDRSet(bool state) {
 void AXP192::SetBusPowerMode(uint8_t state) {
     uint8_t data;
     if (state == 0) {
-        // Set GPIO to 3.3V (LDO OUTPUT mode)
-        data = Read8bit(0x91);
-        Write1Byte(0x91, (data & 0x0F) | 0xF0);
-        // Set GPIO0 to LDO OUTPUT, pullup N_VBUSEN to disable VBUS supply from
-        // BUS_5V
-        data = Read8bit(0x90);
-        Write1Byte(0x90, (data & 0xF8) | 0x02);
         // Set EXTEN to enable 5v boost
         data = Read8bit(0x10);
         Write1Byte(0x10, data | 0x04);
@@ -499,10 +504,6 @@ void AXP192::SetBusPowerMode(uint8_t state) {
         // Set EXTEN to disable 5v boost
         data = Read8bit(0x10);
         Write1Byte(0x10, data & ~0x04);
-        // Set GPIO0 to float, using enternal pulldown resistor to enable VBUS
-        // supply from BUS_5V
-        data = Read8bit(0x90);
-        Write1Byte(0x90, (data & 0xF8) | 0x07);
     }
 }
 
@@ -527,4 +528,57 @@ void AXP192::SetCHGCurrent(uint8_t state) {
     data &= 0xf0;
     data = data | (state & 0x0f);
     Write1Byte(0x33, data);
+}
+
+// GPIO0-4 are used to control Groove port power
+// GPIO0: Groove ports A1 & A2
+// GPIO1: Groove port B1
+// GPIO2: Groove port B2
+// GPIO3: Groove port C1
+// GPIO4: Groove port C2
+void AXP192::SetGPIOOutput(uint8_t bitfield) {
+    // GPIO2 / GPIO1 / GPIO0
+    uint8_t data1 = Read8bit(0x94);
+    data1 &= 0b11111000;
+    data1 |= (bitfield & 0b00000111);
+    Write1Byte(0x94, data1);
+    // GPIO4 / GPIO3
+    uint8_t data2 = Read8bit(0x96);
+    data2 &= 0b11111100;
+    data2 |= (bitfield & 0b00011000) >> 3;
+    Write1Byte(0x96, data2);
+}
+
+uint8_t AXP192::GetGPIOOutput()
+{
+    // GPIO2 / GPIO1 / GPIO0
+    uint8_t data1 = Read8bit(0x94);
+    data1 &= 0b00000111;
+    // GPIO4 / GPIO3
+    uint8_t data2 = Read8bit(0x96);
+    data2 &= 0b00000011;
+
+    return (data2 << 3) | data1;
+}
+
+// Sample call: M5.Axp.SetGroovePower(AXP192::kGroovePort_A1_A2, AXP192::kGroovePower_ON);
+void AXP192::SetGroovePower(GroovePort port, GroovePower power)
+{
+    if(port >= kGroovePort_MAX) return;
+    if(power >= kGroovePower_MAX) return;
+
+    uint8_t state = GetGPIOOutput();
+    uint8_t mask;
+
+    if(port == kGroovePort_ALL) {
+        mask = 0b00011111;
+    } else {
+        mask = 0b00000001 << port;
+    }
+    state &= 0b00011111;
+    if(power == kGroovePower_OFF) {
+        SetGPIOOutput(state & ~mask);
+    } else {
+        SetGPIOOutput(state | mask);
+    }
 }
