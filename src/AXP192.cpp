@@ -48,6 +48,8 @@ void AXP192::begin() {
     // GPIO4/GPIO3: select NMOS open drain mode
     // Note: MSB must be set to enable GPIO functionality (info not in all datasheets)
     Write1Byte(0x95, (Read8bit(0x95) & 0b01110000) | 0b10000101);
+    // Turn power on for all Groove ports
+    SetGroovePower(kGroovePort_ALL, kGroovePower_ON);
 
     // Enable bat detection
     Write1Byte(0x32, 0x46);
