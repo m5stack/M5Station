@@ -46,7 +46,8 @@ void AXP192::begin() {
     // GPIO2: select NMOS open drain mode
     Write1Byte(0x93, (Read8bit(0x93) & 0b11111000) | 0b00000000);
     // GPIO4/GPIO3: select NMOS open drain mode
-    // Note: MSB must be set to enable GPIO functionality (info not in all datasheets)
+    // Note: MSB must be set to enable GPIO functionality (info not in all
+    // datasheets)
     Write1Byte(0x95, (Read8bit(0x95) & 0b01110000) | 0b10000101);
     // Turn power on for all Groove ports by default
     SetGroovePower(kGroovePort_ALL, kGroovePower_ON);
@@ -477,7 +478,6 @@ void AXP192::SetLDOEnable(uint8_t number, bool state) {
     }
 }
 
-
 // void AXP192::SetLCDRSet(bool state) {
 //     uint8_t reg_addr = 0x96;
 //     uint8_t gpio_bit = 0x02;
@@ -551,8 +551,7 @@ void AXP192::SetGPIOOutput(uint8_t bitfield) {
     Write1Byte(0x96, data2);
 }
 
-uint8_t AXP192::GetGPIOOutput()
-{
+uint8_t AXP192::GetGPIOOutput() {
     // GPIO2 / GPIO1 / GPIO0
     uint8_t data1 = Read8bit(0x94);
     data1 &= 0b00000111;
@@ -563,14 +562,13 @@ uint8_t AXP192::GetGPIOOutput()
     return (data2 << 3) | data1;
 }
 
-void AXP192::SetGroovePower(uint8_t mask, GroovePower power)
-{
-    if(mask >= kGroovePort_MAX) return;
-    if(power >= kGroovePower_MAX) return;
+void AXP192::SetGroovePower(uint8_t mask, GroovePower power) {
+    if (mask >= kGroovePort_MAX) return;
+    if (power >= kGroovePower_MAX) return;
 
     uint8_t state = GetGPIOOutput();
     state &= 0b00011111;
-    if(power == kGroovePower_ON) {
+    if (power == kGroovePower_ON) {
         SetGPIOOutput(state | mask);
     } else {
         SetGPIOOutput(state & ~mask);
