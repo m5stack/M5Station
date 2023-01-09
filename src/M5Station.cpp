@@ -37,10 +37,10 @@ void M5Station::begin(bool LCDEnable, bool SerialEnable, bool I2CEnable,
     }
     Rtc.begin();
 
-    INA1.begin(&Wire);
+    INA1.begin(&Wire1);
     INA1.reset();
     INA1.setShuntRes(10, 10, 10);
-    INA2.begin(&Wire, INA3221_ADDR41_VCC);
+    INA2.begin(&Wire1, INA3221_ADDR41_VCC);
     INA2.reset();
     INA2.setShuntRes(10, 10, 10);
 
