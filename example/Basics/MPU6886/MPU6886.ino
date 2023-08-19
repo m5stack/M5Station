@@ -1,6 +1,6 @@
 /*
 *******************************************************************************
-* Copyright (c) 2022 by M5Stack
+* Copyright (c) 2023 by M5Stack
 *                  Equipped with M5Station sample source code
 *                          配套  M5Station 示例源代码
 * Visit for more information: https://docs.m5stack.com/en/core/station_bat
